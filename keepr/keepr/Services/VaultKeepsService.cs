@@ -31,9 +31,15 @@ namespace keepr.Services
 		internal VaultKeep Create(VaultKeep vk)
 		{
 			Vault vault = _vRepo.Get(vk.VaultId);
-			if(vault.CreatorId != vk.CreatorId)
+			if (vault.CreatorId != vk.CreatorId)
 			{
 				throw new Exception("You are not authorized to add a keep to this vault");
+			}
+			List<VaultKeepViewModel> vaultKeeps = _repo.GetKeeps(vk.VaultId);
+			vaultKeeps = vaultKeeps?.FindAll(v => v.Id == vk.KeepId);
+			if (vaultKeeps?.Count >= 1)
+			{
+				throw new Exception("This vault already has this keep");
 			}
 			_kRepo.AddToKeepCount(vk.KeepId);
 			return _repo.Create(vk);
