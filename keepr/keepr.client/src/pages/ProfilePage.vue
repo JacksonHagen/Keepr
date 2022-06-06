@@ -10,13 +10,18 @@
         <i
           class="mdi mdi-plus text-primary action"
           @click="openVaultModal()"
+          v-if="activeProfile.id === account.id"
         ></i>
       </h3>
       <Vault v-for="v in activeUsersVaults" :key="v.id" :vault="v" />
     </div>
     <h3 class="comfortaa ms-2">
       Keeps
-      <i class="mdi mdi-plus text-primary action" @click="openKeepModal()"></i>
+      <i
+        class="mdi mdi-plus text-primary action"
+        @click="openKeepModal()"
+        v-if="activeProfile.id === account.id"
+      ></i>
     </h3>
     <div class="masonry-with-columns">
       <Keep v-for="k in activeUsersKeeps" :key="k.id" :keep="k" />
@@ -80,6 +85,7 @@ export default {
       }
     })
     return {
+      account: computed(() => AppState.account),
       activeProfile: computed(() => AppState.activeProfile),
       activeUsersVaults: computed(() => AppState.activeUsersVaults),
       activeUsersKeeps: computed(() => AppState.activeUsersKeeps),

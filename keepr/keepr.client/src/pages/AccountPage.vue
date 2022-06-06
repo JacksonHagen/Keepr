@@ -7,13 +7,15 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { AppState } from '../AppState'
+import { useRouter } from 'vue-router'
 export default {
   name: 'Account',
   setup() {
     return {
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+
     }
   }
 }

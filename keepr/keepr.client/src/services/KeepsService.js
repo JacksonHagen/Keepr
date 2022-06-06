@@ -17,6 +17,10 @@ class KeepsService
 		logger.log('create keep', res.data)
 		AppState.activeUsersKeeps.unshift(res.data)
 	}
+	async delete(keepId) {
+		const res = await api.delete('api/keeps/' + keepId)
+		const index = AppState.activeVaultKeeps.findIndex(vk => vk.id === keepId)
+		AppState.activeVaultKeeps.splice(index, 1)
+	}
 }
-
 export const keepsService = new KeepsService();

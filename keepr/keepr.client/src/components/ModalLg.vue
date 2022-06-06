@@ -1,4 +1,6 @@
+
 <template>
+  <!-- TODO no vaultId is being passed on add to vault -->
   <div
     class="modal fade"
     id="modalLg"
@@ -42,15 +44,29 @@
                 </div>
               </div>
               <div class="row mt-auto">
-                <div class="col-5 text-start">
-                  <label for="vaultSelect" class="">Add to a vault:</label>
-                  <div class="mb-3">
+                <div
+                  class="col-5 text-start"
+                  v-if="route.name === 'Home' || route.name === 'Profile'"
+                >
+                  <div class="" v-if="user.isAuthenticated">
+                    <button
+                      class="btn btn-outline-success w-100"
+                      v-if="vaultIdRef.vaultId"
+                      @click="addToVault()"
+                    >
+                      Add to vault
+                    </button>
+                    <button
+                      class="btn btn-outline-success w-100 disabled"
+                      v-else
+                    >
+                      Add to vault
+                    </button>
                     <select
                       class="form-control text-primary"
                       name="vaultSelect"
                       id="vaultSelect"
-                      @input="addToVault"
-                      v-model="vault.vaultId"
+                      v-model="vaultIdRef.vaultId"
                     >
                       <option disabled selected>Add to vault</option>
                       <option v-for="v in myVaults" :key="v.id" :value="v.id">
@@ -60,22 +76,41 @@
                   </div>
                 </div>
                 <div
-                  class="
-                    col-1
-                    d-flex
-                    align-items-end
-                    pb-2
-                    justify-content-center
+                  class="col-5 text-start"
+                  v-else-if="
+                    activeVault?.creatorId === account?.id &&
+                    route.name !== 'Profile'
                   "
-                  v-if="keep.creatorId === account.id"
                 >
-                  <h3>
-                    <i class="mdi mdi-delete-outline text-danger"></i>
+                  <button
+                    class="btn btn-outline-secondary btn-sm h-75"
+                    @click="removeFromVault"
+                  >
+                    Remove from vault
+                  </button>
+                </div>
+                <div class="col-5" v-else></div>
+                <div
+                  class="col-1 d-flex align-items-end justify-content-center"
+                  v-if="keep.creatorId === account.id && route.name !== 'Vault'"
+                >
+                  <h3 class="mb-0">
+                    <i
+                      class="
+                        mdi mdi-delete-outline
+                        text-secondary
+                        darken-10
+                        selectable
+                      "
+                      @click="deleteKeep(keep.id)"
+                      title="Delete this keep from Keepr"
+                    ></i>
                   </h3>
                 </div>
+                <div class="col-1" v-else></div>
                 <div class="col-6 d-flex align-items-end">
                   <p
-                    class="selectable rounded"
+                    class="selectable rounded mb-0"
                     @click="goToProfile(keep.creatorId)"
                   >
                     <img
@@ -101,15 +136,21 @@
 import { computed, ref } from '@vue/reactivity'
 import { AppState } from '../AppState.js'
 import { Modal } from 'bootstrap'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { vaultKeepsService } from "../services/VaultKeepsService.js";
 import Pop from '../utils/Pop.js'
+import { keepsService } from '../services/KeepsService.js'
 export default {
   setup() {
     const router = useRouter()
-    const vault = ref({})
+    const route = useRoute()
+    const vaultIdRef = ref({})
     return {
-      vault,
+      route,
+      vaultIdRef,
+      user: computed(() => AppState.user),
+      activeVault: computed(() => AppState.activeVault),
+      account: computed(() => AppState.account),
       keep: computed(() => AppState.activeKeep),
       myVaults: computed(() => AppState.myVaults),
       account: computed(() => AppState.account),
@@ -118,19 +159,45 @@ export default {
         router.push({ name: "Profile", params: { id } })
       },
       async addToVault() {
-        const vaultKeep = {
-          vaultId: vault.value.vaultId,
+        let vaultKeep = {
+          vaultId: vaultIdRef.value.vaultId,
           keepId: this.keep.id
         }
         try {
           await vaultKeepsService.addKeepToVault(vaultKeep)
           Pop.toast('Added to vault!', 'success')
-          vault.value.vaultId = {}
+          vaultIdRef.value = {}
         }
         catch (error) {
           console.error("[COULD_NOT_ADD_TO_VAULT]", error.message);
-          Pop.toast(error.message, "error");
+          Pop.toast("Could not add to vault. (Is this keep already in the vault you selected?)", "error");
           vault.value.vaultId = {}
+        }
+      },
+      async removeFromVault() {
+        try {
+          // TODO make the methods to remove from vault
+          if (await Pop.confirm('Are you sure?', 'Would you like to remove this keep from your vault?', 'warning', 'Yes, remove it!')) {
+            const target = AppState.activeVaultKeeps.find(vk => vk.id === AppState.activeKeep.id)
+            Modal.getOrCreateInstance(document.getElementById('modalLg')).hide()
+            await vaultKeepsService.removeFromVault(target.vaultKeepId)
+          }
+        }
+        catch (error) {
+          console.error("[COULD NOT REMOVE KEEP]", error.message);
+          Pop.toast(error.message, "error");
+        }
+      },
+      async deleteKeep(keepId) {
+        try {
+          if (await Pop.confirm()) {
+            await keepsService.delete(keepId)
+            Pop.toast('Keep deleted from Keepr')
+          }
+        }
+        catch (error) {
+          console.error("[COULD_NOT_DELETE_KEEP]", error.message);
+          Pop.toast(error.message, "error");
         }
       }
     }

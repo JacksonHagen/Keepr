@@ -9,7 +9,7 @@
               <h3 class="comfortaa pt-2">
                 {{ activeUser.name }}
               </h3>
-              <p class="fs-5 comfortaa mb-2">
+              <p class="fs-5 comfortaa mb-1">
                 Keeps: {{ activeUsersKeeps?.length }}
               </p>
               <p class="fs-5 comfortaa">

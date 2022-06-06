@@ -14,6 +14,16 @@ class VaultsService
 		logger.log(res.data)
 		AppState.activeUsersVaults.push(res.data)
 	}
+	async getById(vaultId) {
+		const res = await api.get('api/vaults/' + vaultId)
+		logger.log(res.data)
+		AppState.activeVault = res.data
+	}
+	async delete(id) {
+		await api.delete('api/vaults/' + id)
+		const index = AppState.myVaults.find(v => v.id === id)
+		AppState.myVaults.splice(index, 1)
+	}
 }
 
 export const vaultsService = new VaultsService();
