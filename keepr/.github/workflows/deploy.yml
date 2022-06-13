@@ -1,7 +1,7 @@
 # Deploy Dotnet to Heroku.
 name: Deploy to heroku.
 
-# Run workflow on every push to master branch
+# Run workflow on every push to deploy branch
 on:
   push:
     branches: [deploy]
