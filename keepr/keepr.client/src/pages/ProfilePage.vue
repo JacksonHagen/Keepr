@@ -48,7 +48,7 @@
 
 
 <script>
-import { computed, onMounted } from '@vue/runtime-core'
+import { computed, onMounted, watchEffect } from '@vue/runtime-core'
 import { useRoute } from 'vue-router'
 import { AppState } from '../AppState.js'
 import { profilesService } from "../services/ProfilesService.js";

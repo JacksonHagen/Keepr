@@ -153,6 +153,10 @@ export default {
       account: computed(() => AppState.account),
       keep: computed(() => AppState.activeKeep),
       myVaults: computed(() => AppState.myVaults),
+			availableVaults: computed(() => {
+				let vkList = AppState.myVaults
+
+			}),
       account: computed(() => AppState.account),
       goToProfile(id) {
         Modal.getOrCreateInstance(document.getElementById('modalLg')).hide()
