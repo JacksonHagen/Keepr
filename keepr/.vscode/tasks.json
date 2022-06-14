@@ -7,7 +7,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/keepr/keepr.csproj",
+				"${workspaceFolder}/keepr.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],
@@ -19,7 +19,7 @@
 			"type": "process",
 			"args": [
 				"publish",
-				"${workspaceFolder}/keepr/keepr.csproj",
+				"${workspaceFolder}/keepr.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],
@@ -33,7 +33,7 @@
 				"watch",
 				"run",
 				"--project",
-				"${workspaceFolder}/keepr/keepr.csproj"
+				"${workspaceFolder}/keepr.csproj"
 			],
 			"problemMatcher": "$msCompile"
 		}
