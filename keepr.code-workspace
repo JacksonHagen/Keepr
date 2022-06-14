@@ -1,15 +1,10 @@
 
 {
   "folders": [
-    {
-      "path": "keepr.client",
-      "name": "client"
-    },
-    {
-      "path": "keepr",
-      "name": "server"
-    },{"path":".github/workflows", "name":"workflows"}
-  ],
+		{
+			"path": "."
+		}
+	],
   "settings": {
     "editor.suggestSelection": "first",
     "git.enableSmartCommit": true,
