@@ -29,12 +29,12 @@
         class="dropdown-menu p-0 list-group w-100"
         aria-labelledby="authDropdown"
       >
-        <!-- <div
+        <div
           class="list-group-item list-group-item-action hoverable"
           @click="goToProfilePage()"
         >
-          Manage Account
-        </div> -->
+          My Profile
+        </div>
 
         <div
           class="list-group-item list-group-item-action hoverable text-danger"
